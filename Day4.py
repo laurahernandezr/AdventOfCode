@@ -116,3 +116,57 @@ eyr:2022
 iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719
 Count the number of valid passports - those that have all required fields and valid values. Continue to treat cid as optional. In your batch file, how many passports are valid?
 '''
+
+passports_dictionary = {}
+i = 0
+for p in validfieldspassports:
+    item = p.split()
+    passports_dictionary[i] = {}
+    for field in item:
+        if("byr" in field):
+            passports_dictionary[i]["byr"] = field[4:len(field)]
+        elif("iyr" in field):
+            passports_dictionary[i]["iyr"] = field[4:len(field)]
+        elif("eyr" in field):
+            passports_dictionary[i]["eyr"] = field[4:len(field)]
+        elif("hgt" in field):
+            passports_dictionary[i]["hgt"] = field[4:len(field)]
+        elif("hcl" in field):
+            passports_dictionary[i]["hcl"] = field[4:len(field)]
+        elif("ecl" in field):
+            passports_dictionary[i]["ecl"] = field[4:len(field)]
+        elif("pid" in field):
+            passports_dictionary[i]["pid"] = field[4:len(field)]
+    i += 1
+validPassports = 0
+
+numbers = ["0","1","2","3","4","5","6","7","8","9"]
+letters = ["a","b","c","d","e","f"]
+eye_colors = ["amb","blu", "brn","gry","grn","hzl","oth"]
+for j in range(len(passports_dictionary)):
+    validpoints = 0
+    passport = passports_dictionary[j]
+    if(len(str(passport['byr'])) == 4 and int(str(passport['byr'])) >= 1920 and int(str(passport['byr']))<= 2002):
+        validpoints += 1
+    if(len(passport['iyr']) == 4 and int(passport['iyr']) >= 2010 and int(passport['iyr'])<= 2020):
+        validpoints += 1
+    if(len(passport['eyr']) == 4 and int(passport['eyr']) >= 2020 and int(passport['eyr'])<= 2030):
+        validpoints += 1
+    if(passport['hgt'][-2:len(passport['hgt'])] == "cm" and len(passport['hgt'].strip("cm"))==3 and int(passport['hgt'].strip("cm")) >= 150 and int(passport['hgt'].strip("cm"))<= 193):
+        validpoints += 1
+    elif(passport['hgt'][-2:len(passport['hgt'])] == "in" and len(passport['hgt'].strip("in"))==2 and int(passport['hgt'].strip("in")) >= 59 and int(passport['hgt'].strip("in"))<= 76):
+        validpoints +=1
+    numbs_and_letts_in_hcl = len([c for c in passport['hcl'] if c in numbers]) + len([c for c in passport['hcl'] if c in letters])
+    if(passport['hcl'][0] == "#" and len(passport['hcl'].strip("#")) == 6 and numbs_and_letts_in_hcl == 6):
+        validpoints +=1
+    if(passport['ecl'] in eye_colors):# doesn't check for it only being one
+        validpoints +=1
+    pidlenght = len([c for c in passport['pid'] if c in numbers])
+    if( pidlenght == 9 ):
+        validpoints +=1
+    
+    #print("valid points: " + str(validpoints))
+    if(validpoints>=7):
+        validPassports += 1
+
+print(validPassports)
